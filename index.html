@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Form - Bootstrap</title> 
+    <title>Registration Form - Bootstrap</title>
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <style> 
+    <style>
         body {
             background: #f4f6f9;
         }
@@ -37,53 +37,101 @@
 <body>
 
     <div class="form-container">
-        
+
         <div class="form-header">
             <h2>Registration Form</h2>
             <p class="text-muted">Fill the form to continue</p>
         </div>
 
-        <form>
+        <div id="successAlert" class="alert alert-success d-none" role="alert">
+            Form submitted successfully. Thank you for registering.
+        </div>
+
+        <form id="registrationForm" novalidate>
 
             <div class="mb-3">
-                <label class="form-label">Full Name</label>
-                <input type="text" class="form-control" placeholder="Enter your full name">
+                <label for="fullName" class="form-label">Full Name</label>
+                <input type="text" id="fullName" name="fullName" class="form-control" placeholder="Enter your full name" required minlength="2">
+                <div class="invalid-feedback">Please enter your full name.</div>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Email Address</label>
-                <input type="email" class="form-control" placeholder="example@gmail.com">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="example@gmail.com" required>
+                <div class="invalid-feedback">Please enter a valid email address.</div>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Phone Number</label>
-                <input type="tel" class="form-control" placeholder="+92 300 1234567">
+                <label for="phone" class="form-label">Phone Number</label>
+                <input type="tel" id="phone" name="phone" class="form-control" placeholder="+92 300 1234567" pattern="^\+?[0-9 ]{7,15}$" required>
+                <div class="invalid-feedback">Please enter a valid phone number (digits only, 7 to 15 characters).</div>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Password</label>
-                <input type="password" class="form-control" placeholder="•••••••">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="Minimum 6 characters" minlength="6" required>
+                <div class="invalid-feedback">Password must be at least 6 characters long.</div>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Confirm Password</label>
-                <input type="password" class="form-control" placeholder="Re-enter password">
+                <label for="confirmPassword" class="form-label">Confirm Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" placeholder="Re-enter password" required>
+                <div class="invalid-feedback">Passwords do not match.</div>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Gender</label>
-                <select class="form-select">
-                    <option selected disabled>Select Gender</option>
-                    <option>Male</option>
-                    <option>Female</option>
-                    <option>Other</option>
+                <label for="gender" class="form-label">Gender</label>
+                <select id="gender" name="gender" class="form-select" required>
+                    <option value="" selected disabled>Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
                 </select>
+                <div class="invalid-feedback">Please select your gender.</div>
             </div>
 
             <button type="submit" class="btn btn-primary btn-custom">Submit</button>
 
         </form>
     </div>
+
+    <script>
+        (function () {
+            var form = document.getElementById('registrationForm');
+            var password = document.getElementById('password');
+            var confirmPassword = document.getElementById('confirmPassword');
+            var successAlert = document.getElementById('successAlert');
+
+            function checkPasswordsMatch() {
+                if (confirmPassword.value !== password.value) {
+                    confirmPassword.setCustomValidity('Passwords do not match.');
+                } else {
+                    confirmPassword.setCustomValidity('');
+                }
+            }
+
+            password.addEventListener('input', checkPasswordsMatch);
+            confirmPassword.addEventListener('input', checkPasswordsMatch);
+
+            form.addEventListener('submit', function (event) {
+                checkPasswordsMatch();
+
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                } else {
+                    event.preventDefault();
+                    successAlert.classList.remove('d-none');
+                    form.reset();
+                    form.classList.remove('was-validated');
+                    successAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    return;
+                }
+
+                form.classList.add('was-validated');
+            });
+        })();
+    </script>
 
     <!-- Bootstrap JS - CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
